@@ -50,58 +50,116 @@
 
 // export default App;
 
-import { useState } from "react";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+// import { useState } from "react";
+// import { getCurrentWindow } from "@tauri-apps/api/window";
 
+// const appWindow = getCurrentWindow();
+
+// function App() {
+//   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+
+//   return (
+//     <main className="flex flex-col h-screen bg-white select-none">
+      
+//       {/* Titlebar custom */}
+//       <div 
+//         className="flex items-center justify-between bg-gray-100 border-b border-gray-300 text-sm px-2 h-8"
+//         onMouseDown={(e) => {
+//           if (e.target === e.currentTarget) {
+//             appWindow.startDragging();
+//           }
+//         }}
+//       >
+//         {/* Menu gauche */}
+//         <div className="flex" onMouseDown={(e) => e.stopPropagation()}>
+//           {["Fichier", "Edition", "Affichage", "Aide"].map((menu) => (
+//             <div
+//               key={menu}
+//               className="relative"
+//               onMouseEnter={() => setActiveMenu(menu)}
+//               onMouseLeave={() => setActiveMenu(null)}
+//             >
+//               <button className="px-3 py-1 hover:bg-gray-200 rounded">
+//                 {menu}
+//               </button>
+//               {activeMenu === menu && (
+//                 <div className="absolute left-0 bg-white border border-gray-300 shadow-md z-10 w-40">
+//                   <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+//                     Option 1
+//                   </button>
+//                 </div>
+//               )}
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Titre centré — zone de drag principale */}
+//         {/* Zone de drag centrale */}
+//         <div
+//           className="flex-1 h-full w-7 cursor-grab active:cursor-grabbing bg-black"
+//           onMouseDown={() => appWindow.startDragging()}
+//         />
+//         <span
+//           className="text-xs text-gray-500 cursor-move flex-1 text-center"
+//           onMouseDown={() => appWindow.startDragging()}
+//         >
+//           ash-bloc-note
+//         </span>
+
+//         {/* Boutons fenêtre */}
+//         <div className="flex" onMouseDown={(e) => e.stopPropagation()}>
+//           <button
+//             onClick={() => appWindow.minimize()}
+//             className="px-3 py-1 hover:bg-gray-200 text-gray-600"
+//           >─</button>
+//           <button
+//             onClick={() => appWindow.toggleMaximize()}
+//             className="px-3 py-1 hover:bg-gray-200 text-gray-600"
+//           >□</button>
+//           <button
+//             onClick={() => appWindow.close()}
+//             className="px-3 py-1 hover:bg-red-500 hover:text-white text-gray-600"
+//           >✕</button>
+//         </div>
+//       </div>
+
+//       {/* Zone de texte */}
+//       <textarea
+//         className="flex-1 p-4 resize-none outline-none font-mono text-sm select-text"
+//         placeholder="Commencez à écrire..."
+//       />
+
+//     </main>
+//   );
+// }
+
+// export default App;
+
+import { getCurrentWindow } from "@tauri-apps/api/window";
+// 
 const appWindow = getCurrentWindow();
 
 function App() {
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   return (
-    <main className="flex flex-col h-screen bg-white select-none">
-      
+    <main className="flex flex-col h-screen w-screen bg-white">
+
       {/* Titlebar custom */}
-      <div 
-        className="flex items-center justify-between bg-gray-100 border-b border-gray-300 text-sm px-2 h-8"
+      <div
+        className="h-8 flex items-center bg-gray-100 border-b border-gray-200 select-none shrink-0"
         onMouseDown={(e) => {
-          if (e.target === e.currentTarget) {
-            appWindow.startDragging();
-          }
+          if (e.target === e.currentTarget) appWindow.startDragging();
         }}
       >
-        {/* Menu gauche */}
-        <div className="flex" onMouseDown={(e) => e.stopPropagation()}>
-          {["Fichier", "Edition", "Affichage", "Aide"].map((menu) => (
-            <div
-              key={menu}
-              className="relative"
-              onMouseEnter={() => setActiveMenu(menu)}
-              onMouseLeave={() => setActiveMenu(null)}
-            >
-              <button className="px-3 py-1 hover:bg-gray-200 rounded">
-                {menu}
-              </button>
-              {activeMenu === menu && (
-                <div className="absolute left-0 bg-white border border-gray-300 shadow-md z-10 w-40">
-                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                    Option 1
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Titre centré — zone de drag principale */}
-        {/* Zone de drag centrale */}
+        {/* Zone de drag gauche */}
         <div
-          className="flex-1 h-full w-7 cursor-grab active:cursor-grabbing bg-black"
+          className="flex-1 h-full"
           onMouseDown={() => appWindow.startDragging()}
         />
+
+        {/* Titre centré */}
         <span
-          className="text-xs text-gray-500 cursor-move flex-1 text-center"
-          onMouseDown={() => appWindow.startDragging()}
+          className="text-xs text-gray-400 absolute left-1/2 -translate-x-1/2 pointer-events-none"
         >
           ash-bloc-note
         </span>
@@ -110,25 +168,25 @@ function App() {
         <div className="flex" onMouseDown={(e) => e.stopPropagation()}>
           <button
             onClick={() => appWindow.minimize()}
-            className="px-3 py-1 hover:bg-gray-200 text-gray-600"
-          >─</button>
+            className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 text-gray-500 text-sm"
+          >
+            ─
+          </button>
           <button
             onClick={() => appWindow.toggleMaximize()}
-            className="px-3 py-1 hover:bg-gray-200 text-gray-600"
-          >□</button>
+            className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 text-gray-500 text-sm"
+          >
+            □
+          </button>
           <button
             onClick={() => appWindow.close()}
-            className="px-3 py-1 hover:bg-red-500 hover:text-white text-gray-600"
-          >✕</button>
+            className="w-8 h-8 flex items-center justify-center hover:bg-red-500 hover:text-white text-gray-500 text-sm"
+          >
+            ✕
+          </button>
         </div>
       </div>
-
-      {/* Zone de texte */}
-      <textarea
-        className="flex-1 p-4 resize-none outline-none font-mono text-sm select-text"
-        placeholder="Commencez à écrire..."
-      />
-
+      <div className="flex-1 w-full" />
     </main>
   );
 }
