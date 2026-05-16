@@ -142,7 +142,7 @@ const appWindow = getCurrentWindow();
 function App() {
 
   return (
-    <main className="flex flex-col h-screen w-screen bg-white">
+    <main className="flex flex-col h-screen w-screen bg-white rounded-2xl overflow-hidden">
 
       {/* Titlebar custom */}
       <div
