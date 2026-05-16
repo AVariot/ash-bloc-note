@@ -25,7 +25,7 @@ export default function WritingSide() {
             {/* Zone d'écriture */}
             <EditorContent
                 editor={editor}
-                className="flex-1 overflow-y-auto p-4 prose prose-sm max-w-none focus:outline-none"
+                className="flex-1 overflow-y-auto prose prose-sm max-w-none [&_.ProseMirror]:min-h-full [&_.ProseMirror]:outline-none [&_.ProseMirror]:p-4"
             />
         </div>
     )

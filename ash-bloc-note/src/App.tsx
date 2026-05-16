@@ -50,97 +50,23 @@
 
 // export default App;
 
-// import { useState } from "react";
-// import { getCurrentWindow } from "@tauri-apps/api/window";
-
-// const appWindow = getCurrentWindow();
-
-// function App() {
-//   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-
-//   return (
-//     <main className="flex flex-col h-screen bg-white select-none">
-      
-//       {/* Titlebar custom */}
-//       <div 
-//         className="flex items-center justify-between bg-gray-100 border-b border-gray-300 text-sm px-2 h-8"
-//         onMouseDown={(e) => {
-//           if (e.target === e.currentTarget) {
-//             appWindow.startDragging();
-//           }
-//         }}
-//       >
-//         {/* Menu gauche */}
-//         <div className="flex" onMouseDown={(e) => e.stopPropagation()}>
-//           {["Fichier", "Edition", "Affichage", "Aide"].map((menu) => (
-//             <div
-//               key={menu}
-//               className="relative"
-//               onMouseEnter={() => setActiveMenu(menu)}
-//               onMouseLeave={() => setActiveMenu(null)}
-//             >
-//               <button className="px-3 py-1 hover:bg-gray-200 rounded">
-//                 {menu}
-//               </button>
-//               {activeMenu === menu && (
-//                 <div className="absolute left-0 bg-white border border-gray-300 shadow-md z-10 w-40">
-//                   <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-//                     Option 1
-//                   </button>
-//                 </div>
-//               )}
-//             </div>
-//           ))}
-//         </div>
-
-//         {/* Titre centré — zone de drag principale */}
-//         {/* Zone de drag centrale */}
-//         <div
-//           className="flex-1 h-full w-7 cursor-grab active:cursor-grabbing bg-black"
-//           onMouseDown={() => appWindow.startDragging()}
-//         />
-//         <span
-//           className="text-xs text-gray-500 cursor-move flex-1 text-center"
-//           onMouseDown={() => appWindow.startDragging()}
-//         >
-//           ash-bloc-note
-//         </span>
-
-//         {/* Boutons fenêtre */}
-//         <div className="flex" onMouseDown={(e) => e.stopPropagation()}>
-//           <button
-//             onClick={() => appWindow.minimize()}
-//             className="px-3 py-1 hover:bg-gray-200 text-gray-600"
-//           >─</button>
-//           <button
-//             onClick={() => appWindow.toggleMaximize()}
-//             className="px-3 py-1 hover:bg-gray-200 text-gray-600"
-//           >□</button>
-//           <button
-//             onClick={() => appWindow.close()}
-//             className="px-3 py-1 hover:bg-red-500 hover:text-white text-gray-600"
-//           >✕</button>
-//         </div>
-//       </div>
-
-//       {/* Zone de texte */}
-//       <textarea
-//         className="flex-1 p-4 resize-none outline-none font-mono text-sm select-text"
-//         placeholder="Commencez à écrire..."
-//       />
-
-//     </main>
-//   );
-// }
-
-// export default App;
-
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import WritingSide from "./components/writing_side";
+import { invoke } from "@tauri-apps/api/core";
+import { useState } from "react";
 
 const appWindow = getCurrentWindow();
 
 function App() {
+  const [doss, setDoss] = useState<[string]>([""]);
+
+  async function getFolder() {
+    try {
+      setDoss(await invoke("explorateur", { path: "~" }));
+    } catch (e) {
+      console.error("explorateur error:", e);
+    }
+  }
 
   return (
     <main className="flex flex-col h-screen w-screen bg-white rounded-2xl overflow-hidden">
@@ -156,7 +82,14 @@ function App() {
         <div
           className="flex-1 h-full"
           onMouseDown={() => appWindow.startDragging()}
-        />
+        >
+          <button onMouseDown={(e) => e.stopPropagation()} onClick={getFolder}>
+            a
+          </button>
+          {
+            doss.map((e, key) => <div key={key}>{e}</div>)
+          }
+        </div>
 
         {/* Titre centré */}
         <span
