@@ -4,13 +4,14 @@ import StarterKit from '@tiptap/starter-kit'
 export default function WritingSide() {
     const editor = useEditor({ extensions: [StarterKit] })
 
-    const { isBold, isItalic } = useEditorState({
+    const { isBold, isItalic, isCode } = useEditorState({
         editor,
         selector: (ctx) => ({
             isBold: ctx.editor?.isActive('bold') ?? false,
             isItalic: ctx.editor?.isActive('italic') ?? false,
+            isCode: ctx.editor?.isActive('code') ?? false,
         }),
-    }) ?? { isBold: false, isItalic: false }
+    }) ?? { isBold: false, isItalic: false, isCode: false }
 
     return (
         <div className="flex flex-col flex-1 overflow-hidden bg-[--color-brown-bg]">
@@ -27,6 +28,12 @@ export default function WritingSide() {
                     className={`px-2 py-1 text-sm rounded hover:bg-gray-200 italic ${isItalic ? 'bg-[var(--color-gold)]' : ''}`}
                 >
                     I
+                </button>
+                <button
+                    onClick={() => editor?.chain().focus().toggleCode().run()}
+                    className={`px-2 py-1 text-sm rounded hover:bg-gray-200 italic ${isCode ? 'bg-[var(--color-gold)]' : ''}`}
+                    >
+                    C
                 </button>
             </div>
 
