@@ -7,7 +7,9 @@ html, body, #root {
   height: 100%;
 
   --color-gold: #bd8724;
-  --color-brown: #5e472c;
+  --color-brown: #332718;
+  --color-brown-secondary: #5e472c;
+  --color-brown-bg: #bd9b74;
   --color-bg: #1a1008;
   --color-gold-light: #ffe8a0;
 }
