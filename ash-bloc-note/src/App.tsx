@@ -63,11 +63,15 @@ function App() {
       
       {/* Titlebar custom */}
       <div 
-        className="flex items-center justify-between bg-gray-100 border-b border-gray-300 text-sm px-2"
-        data-tauri-drag-region
+        className="flex items-center justify-between bg-gray-100 border-b border-gray-300 text-sm px-2 h-8"
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget) {
+            appWindow.startDragging();
+          }
+        }}
       >
         {/* Menu gauche */}
-        <div className="flex">
+        <div className="flex" onMouseDown={(e) => e.stopPropagation()}>
           {["Fichier", "Edition", "Affichage", "Aide"].map((menu) => (
             <div
               key={menu}
@@ -89,13 +93,21 @@ function App() {
           ))}
         </div>
 
-        {/* Titre centré */}
-        <span className="text-xs text-gray-500" data-tauri-drag-region>
+        {/* Titre centré — zone de drag principale */}
+        {/* Zone de drag centrale */}
+        <div
+          className="flex-1 h-full w-7 cursor-grab active:cursor-grabbing bg-black"
+          onMouseDown={() => appWindow.startDragging()}
+        />
+        <span
+          className="text-xs text-gray-500 cursor-move flex-1 text-center"
+          onMouseDown={() => appWindow.startDragging()}
+        >
           ash-bloc-note
         </span>
 
         {/* Boutons fenêtre */}
-        <div className="flex">
+        <div className="flex" onMouseDown={(e) => e.stopPropagation()}>
           <button
             onClick={() => appWindow.minimize()}
             className="px-3 py-1 hover:bg-gray-200 text-gray-600"
@@ -113,7 +125,7 @@ function App() {
 
       {/* Zone de texte */}
       <textarea
-        className="flex-1 p-4 resize-none outline-none font-mono text-sm"
+        className="flex-1 p-4 resize-none outline-none font-mono text-sm select-text"
         placeholder="Commencez à écrire..."
       />
 
