@@ -4,14 +4,15 @@ import StarterKit from '@tiptap/starter-kit'
 export default function WritingSide() {
     const editor = useEditor({ extensions: [StarterKit] })
 
-    const { isBold, isItalic, isCode } = useEditorState({
+    const { isBold, isItalic, isCode, isH1 } = useEditorState({
         editor,
         selector: (ctx) => ({
             isBold: ctx.editor?.isActive('bold') ?? false,
             isItalic: ctx.editor?.isActive('italic') ?? false,
             isCode: ctx.editor?.isActive('code') ?? false,
+            isH1: ctx.editor?.isActive('heading', { level: 1 }) ?? false,
         }),
-    }) ?? { isBold: false, isItalic: false, isCode: false }
+    }) ?? { isBold: false, isItalic: false, isCode: false, isH1: false }
 
     return (
         <div className="flex flex-col flex-1 overflow-hidden bg-[--color-brown-bg]">
@@ -31,9 +32,15 @@ export default function WritingSide() {
                 </button>
                 <button
                     onClick={() => editor?.chain().focus().toggleCode().run()}
-                    className={`px-2 py-1 text-sm rounded hover:bg-gray-200 italic ${isCode ? 'bg-[var(--color-gold)]' : ''}`}
+                    className={`px-2 py-1 text-sm rounded hover:bg-gray-200 ${isCode ? 'bg-[var(--color-gold)]' : ''}`}
                     >
                     C
+                </button>
+                <button
+                    onClick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
+                    className={`px-2 py-1 text-sm rounded hover:bg-gray-200 ${isH1 ? 'bg-[var(--color-gold)]' : ''}`}
+                    >
+                    H1
                 </button>
             </div>
 
