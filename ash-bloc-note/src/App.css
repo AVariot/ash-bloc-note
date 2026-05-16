@@ -5,4 +5,9 @@
 html, body, #root {
   background: transparent;
   height: 100%;
+
+  --color-gold: #bd8724;
+  --color-brown: #5e472c;
+  --color-bg: #1a1008;
+  --color-gold-light: #ffe8a0;
 }
