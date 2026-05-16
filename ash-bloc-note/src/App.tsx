@@ -136,7 +136,8 @@
 // export default App;
 
 import { getCurrentWindow } from "@tauri-apps/api/window";
-// 
+import WritingSide from "./components/writing_side";
+
 const appWindow = getCurrentWindow();
 
 function App() {
@@ -186,7 +187,7 @@ function App() {
           </button>
         </div>
       </div>
-      <div className="flex-1 w-full" />
+      <WritingSide />
     </main>
   );
 }
