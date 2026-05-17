@@ -19,14 +19,20 @@ export default function WritingSide({ setTabContent, tabContent, current_path, s
         onUpdate: ({ editor }) => {
             setTabContent(prev => prev.map((c, i) => i === currentIndex ? editor.getHTML() : c));
         },
+        editorProps: {
+            handleKeyDown(view, event) {
+                if (event.key === ' ' && !event.ctrlKey && !event.metaKey) {
+                    view.dispatch(view.state.tr.insertText(' '));
+                    return true;
+                }
+                return false;
+            }
+        }
     })
     const [path, setPath] = useState<string>(current_path);
     const pathRef = useRef<string>("");
 
     useEffect(() => {
-        if (!editor) return;
-        editor.commands.setContent(tabContent ?? "");
-        console.log(current_path);
         const parts = current_path.split("/");
         const filename = parts[parts.length - 1];
         if (filename !== "untitled") {
@@ -35,7 +41,7 @@ export default function WritingSide({ setTabContent, tabContent, current_path, s
         } else {
             pathRef.current = "";
         }
-    }, [tabContent, current_path]);
+    }, [current_path]);
 
     async function saveFile(content: string) {
         let filePath = pathRef.current;
@@ -109,7 +115,7 @@ export default function WritingSide({ setTabContent, tabContent, current_path, s
             {/* Zone d'écriture */}
             <EditorContent
                 editor={editor}
-                className="flex-1 overflow-y-auto prose prose-sm max-w-none [&_.ProseMirror]:min-h-full [&_.ProseMirror]:outline-none [&_.ProseMirror]:p-4"
+                className="flex-1 overflow-y-auto prose prose-sm max-w-none [&_.ProseMirror]:min-h-full [&_.ProseMirror]:outline-none [&_.ProseMirror]:p-4 [&_.ProseMirror]:whitespace-pre-wrap"
             />
         </div>
     )
