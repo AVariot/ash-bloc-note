@@ -1,8 +1,25 @@
+import { invoke } from '@tauri-apps/api/core';
+import { save } from '@tauri-apps/plugin-dialog';
 import { useEditor, EditorContent, useEditorState } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import { useEffect, useRef, useState } from 'react'
 
 export default function WritingSide() {
     const editor = useEditor({ extensions: [StarterKit] })
+    const [path, setPath] = useState<string>("");
+    const pathRef = useRef<string>("");
+
+    async function saveFile(content: string) {
+        let filePath = pathRef.current;
+        if (!filePath) {
+            const picked = await save();
+            if (!picked) return;
+            filePath = picked;
+            setPath(filePath);
+            pathRef.current = filePath;
+        }
+        await invoke<boolean>("save_file", { path: filePath, content });
+    }
 
     const { isBold, isItalic, isCode, isH1 } = useEditorState({
         editor,
@@ -13,6 +30,22 @@ export default function WritingSide() {
             isH1: ctx.editor?.isActive('heading', { level: 1 }) ?? false,
         }),
     }) ?? { isBold: false, isItalic: false, isCode: false, isH1: false }
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.ctrlKey && event.key === 's') {
+                event.preventDefault();
+                if (editor) {
+                    saveFile(editor.getHTML());
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [editor]);
+
+
 
     return (
         <div className="flex flex-col flex-1 overflow-hidden bg-[--color-brown-bg]">

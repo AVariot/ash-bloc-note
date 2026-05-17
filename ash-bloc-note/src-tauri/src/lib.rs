@@ -1,6 +1,7 @@
 
 pub mod explorateur;
 pub mod tools;
+pub mod save_file;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -12,7 +13,11 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
-        .invoke_handler(tauri::generate_handler![greet, explorateur::explorateur])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            explorateur::explorateur,
+            save_file::save_file,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
