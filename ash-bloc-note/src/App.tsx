@@ -56,7 +56,7 @@ function App() {
     <main className="relative flex flex-col h-screen w-screen rounded-2xl overflow-hidden">
       <Titlebar setTab={setTab} setTabContent={setTabContent} />
       <TabBar />
-      {tab[tabSelected] && <WritingSide setTabContent={setTabContent} tabContent={tabContent[tabSelected]} current_path={tab[tabSelected]} setCurrentPath={setTab} currentIndex={tabSelected} />}
+      {tab[tabSelected] && <WritingSide key={tabSelected} setTabContent={setTabContent} tabContent={tabContent[tabSelected]} current_path={tab[tabSelected]} setCurrentPath={setTab} currentIndex={tabSelected} />}
     </main>
   );
 }

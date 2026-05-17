@@ -13,7 +13,13 @@ interface WritingSideProps {
 }
 
 export default function WritingSide({ setTabContent, tabContent, current_path, setCurrentPath, currentIndex }: WritingSideProps) {
-    const editor = useEditor({ extensions: [StarterKit], content: tabContent })
+    const editor = useEditor({
+        extensions: [StarterKit],
+        content: tabContent,
+        onUpdate: ({ editor }) => {
+            setTabContent(prev => prev.map((c, i) => i === currentIndex ? editor.getHTML() : c));
+        },
+    })
     const [path, setPath] = useState<string>(current_path);
     const pathRef = useRef<string>("");
 
