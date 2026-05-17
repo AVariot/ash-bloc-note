@@ -3,7 +3,7 @@ name: 'Publish Release'
 on:
   push:
     tags:
-      - 'v*' # Se déclenche lors du push d'un tag (ex: v0.1.5)
+      - 'v*' # Se déclenche lors du push d'un tag (ex: v0.1.6)
 
 jobs:
   publish-tauri:
@@ -21,14 +21,17 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      # Dépendances obligatoires pour compiler du Tauri sur Linux (Corrigé !)
+      # Dépendances obligatoires pour compiler du Tauri sur Linux
       - name: install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev desktop-file-utils libappindicator3-dev librsvg2-dev patchelf
 
+      # On se déplace dans le sous-dossier pour installer les packages Node
       - name: install frontend dependencies
-        run: npm install
+        run: |
+          cd ash-bloc-note
+          npm install
 
       # Build et création de la release
       - name: Build and Release Tauri app
@@ -41,3 +44,5 @@ jobs:
           releaseBody: 'Déploiement automatique Linux de la version v__VERSION__.'
           releaseDraft: true
           prerelease: false
+          # On indique explicitement à Tauri où se trouve le projet
+          projectPath: './ash-bloc-note'
