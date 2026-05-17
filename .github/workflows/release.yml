@@ -3,7 +3,7 @@ name: 'Publish Release'
 on:
   push:
     tags:
-      - 'v*' # Se déclenche lors du push d'un tag (ex: v0.1.4)
+      - 'v*' # Se déclenche lors du push d'un tag (ex: v0.1.5)
 
 jobs:
   publish-tauri:
@@ -21,11 +21,11 @@ jobs:
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
-      # Dépendances obligatoires pour compiler du Tauri sur Linux
+      # Dépendances obligatoires pour compiler du Tauri sur Linux (Corrigé !)
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libdesktop-file-utils libappindicator3-dev librsvg2-dev patchelf
+          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev desktop-file-utils libappindicator3-dev librsvg2-dev patchelf
 
       - name: install frontend dependencies
         run: npm install
