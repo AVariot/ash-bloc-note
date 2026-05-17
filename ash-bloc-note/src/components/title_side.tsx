@@ -2,6 +2,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { homeDir } from "@tauri-apps/api/path";
 
 interface TitlebarProps {
   setTab: React.Dispatch<React.SetStateAction<string[]>>;
@@ -13,7 +14,7 @@ export default function Titlebar({setTab, setTabContent}: TitlebarProps) {
     const appWindow = getCurrentWindow();
 
     async function load_file() {
-      const picked = await open({ multiple: false });
+      const picked = await homeDir().then(home => open({ multiple: false, defaultPath: home }));
       if (!picked) return;
       setTab(prev => ([...prev, picked]));
       const content = await invoke<string>("load_file", { path: picked });
