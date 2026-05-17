@@ -13,15 +13,22 @@ function App() {
   }, []);
   const [tabSelected, setTabSelected] = useState<number>(0);
   const [tabContent, setTabContent] = useState<string[]>([""]);
+
+  function closeTab(index: number) {
+    setTab(prev => prev.filter((_, i) => i !== index));
+    setTabContent(prev => prev.filter((_, i) => i !== index));
+    setTabSelected(prev => Math.max(0, prev > index ? prev - 1 : Math.min(prev, tab.length - 2)));
+  }
   
   function TabBar() {
     return <div className="h-[6%] w-full shrink-0 flex flex-row bg-[--color-brown-third] overflow-x-auto gap-1 p-1">
       {
         tab.map((e, key) => {
           let e_arr = e.split('/');
-          return <button key={key} onClick={() => setTabSelected(key)} className={`${ tabSelected == key ? 'bg-[--color-brown-bg]' : '' } pl-2 pr-2 rounded-md text-[100%]`}>
-            {e_arr[e_arr.length - 1]}
-          </button>
+          return <div key={key} className={`${tabSelected == key ? 'bg-[--color-brown-bg]' : ''} flex items-center pl-2 pr-1 rounded-md text-[100%] gap-1`}>
+            <span onClick={() => setTabSelected(key)} className="cursor-pointer">{e_arr[e_arr.length - 1]}</span>
+            <button onClick={() => closeTab(key)} className="opacity-50 hover:opacity-100 px-1">✕</button>
+          </div>
         })
       }
     </div>
