@@ -8,9 +8,11 @@ interface WritingSideProps {
   setTabContent: React.Dispatch<React.SetStateAction<string[]>>;
   tabContent: string,
   current_path: string,
+  setCurrentPath: React.Dispatch<React.SetStateAction<string[]>>;
+  currentIndex: number;
 }
 
-export default function WritingSide({ setTabContent, tabContent, current_path }: WritingSideProps) {
+export default function WritingSide({ setTabContent, tabContent, current_path, setCurrentPath, currentIndex }: WritingSideProps) {
     const editor = useEditor({ extensions: [StarterKit], content: tabContent })
     const [path, setPath] = useState<string>(current_path);
     const pathRef = useRef<string>("");
@@ -18,8 +20,15 @@ export default function WritingSide({ setTabContent, tabContent, current_path }:
     useEffect(() => {
         if (!editor) return;
         editor.commands.setContent(tabContent ?? "");
-        pathRef.current = current_path;
-        setPath(current_path);
+        console.log(current_path);
+        const parts = current_path.split("/");
+        const filename = parts[parts.length - 1];
+        if (filename !== "untitled") {
+            pathRef.current = current_path;
+            setPath(current_path);
+        } else {
+            pathRef.current = "";
+        }
     }, [tabContent, current_path]);
 
     async function saveFile(content: string) {
@@ -30,6 +39,7 @@ export default function WritingSide({ setTabContent, tabContent, current_path }:
             filePath = picked;
             setPath(filePath);
             pathRef.current = filePath;
+            setCurrentPath(prev => prev.map((p, i) => i === currentIndex ? picked : p));
         }
         await invoke<boolean>("save_file", { path: filePath, content });
     }

@@ -19,7 +19,6 @@ export default function Titlebar({setTab, setTabContent}: TitlebarProps) {
       setTab(prev => ([...prev, picked]));
       const content = await invoke<string>("load_file", { path: picked });
       setTabContent(prev => ([...prev, content]));
-      // console.log(content);
     }
 
     function TitleButton({ onClick, title }: {onClick: () => void, title: string}) {
