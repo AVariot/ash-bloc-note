@@ -6,7 +6,7 @@ import { homeDir } from "@tauri-apps/api/path";
 
 
 function App() {
-  const [tab, setTab] = useState<string[]>(["untitled"]);
+  const [tab, setTab] = useState<string[]>([]);
 
   useEffect(() => {
     homeDir().then(home => setTab([`${home}/untitled`]));
@@ -29,11 +29,27 @@ function App() {
 
   useEffect(() => {}, [tabSelected, tabContent]);
 
+  useEffect(() => {
+      const handleKeyDown = (event: KeyboardEvent) => {
+          if (event.ctrlKey && event.key === 'n') {
+            event.preventDefault();
+            homeDir().then(home => {
+              setTab(prev => [...prev, `${home}/untitled`]);
+              setTabSelected(prev => prev + 1);
+            });
+            setTabContent(prev => [...prev, ""]);
+          }
+      };
+
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
     <main className="relative flex flex-col h-screen w-screen rounded-2xl overflow-hidden">
       <Titlebar setTab={setTab} setTabContent={setTabContent} />
       <TabBar />
-      <WritingSide setTabContent={setTabContent} tabContent={tabContent[tabSelected]} current_path={tab[tabSelected]} setCurrentPath={setTab} currentIndex={tabSelected} />
+      {tab[tabSelected] && <WritingSide setTabContent={setTabContent} tabContent={tabContent[tabSelected]} current_path={tab[tabSelected]} setCurrentPath={setTab} currentIndex={tabSelected} />}
     </main>
   );
 }
