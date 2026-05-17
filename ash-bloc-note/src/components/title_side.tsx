@@ -1,23 +1,24 @@
 
 import { invoke } from "@tauri-apps/api/core";
-import { useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 
-export default function Titlebar() {
+interface TitlebarProps {
+  setTab: React.Dispatch<React.SetStateAction<string[]>>;
+  setTabContent: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+export default function Titlebar({setTab, setTabContent}: TitlebarProps) {
     
     const appWindow = getCurrentWindow();
 
-    const [doss, setDoss] = useState<[string]>([""]);
-
-    async function getFolder() {
-        const folder = await open({ directory: true });
-        if (!folder) return;
-        try {
-            setDoss(await invoke("explorateur", { path: folder }));
-        } catch (e) {
-            console.error("explorateur error:", e);
-        }
+    async function load_file() {
+      const picked = await open({ multiple: false });
+      if (!picked) return;
+      setTab(prev => ([...prev, picked]));
+      const content = await invoke<string>("load_file", { path: picked });
+      setTabContent(prev => ([...prev, content]));
+      // console.log(content);
     }
 
     function TitleButton({ onClick, title }: {onClick: () => void, title: string}) {
@@ -42,7 +43,7 @@ export default function Titlebar() {
         {/* Bouton dossier */}
         <button
           onMouseDown={(e) => e.stopPropagation()}
-          onClick={getFolder}
+          onClick={load_file}
           className="ml-2 px-2 py-0.5 text-[10px] text-[var(--color-gold)] border border-[var(--color-brown)] hover:bg-[var(--color-brown)] hover:text-[var(--color-gold-light)] transition-colors"
         >
           ☩ CODEX

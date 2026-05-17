@@ -2,6 +2,7 @@
 pub mod explorateur;
 pub mod tools;
 pub mod save_file;
+pub mod load_file;
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -17,6 +18,7 @@ pub fn run() {
             greet,
             explorateur::explorateur,
             save_file::save_file,
+            load_file::load_file,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

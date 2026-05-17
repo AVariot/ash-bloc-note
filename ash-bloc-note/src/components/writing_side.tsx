@@ -4,10 +4,23 @@ import { useEditor, EditorContent, useEditorState } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { useEffect, useRef, useState } from 'react'
 
-export default function WritingSide() {
-    const editor = useEditor({ extensions: [StarterKit] })
-    const [path, setPath] = useState<string>("");
+interface WritingSideProps {
+  setTabContent: React.Dispatch<React.SetStateAction<string[]>>;
+  tabContent: string,
+  current_path: string,
+}
+
+export default function WritingSide({ setTabContent, tabContent, current_path }: WritingSideProps) {
+    const editor = useEditor({ extensions: [StarterKit], content: tabContent })
+    const [path, setPath] = useState<string>(current_path);
     const pathRef = useRef<string>("");
+
+    useEffect(() => {
+        if (!editor) return;
+        editor.commands.setContent(tabContent ?? "");
+        pathRef.current = current_path;
+        setPath(current_path);
+    }, [tabContent, current_path]);
 
     async function saveFile(content: string) {
         let filePath = pathRef.current;
