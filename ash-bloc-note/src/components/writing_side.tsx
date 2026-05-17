@@ -32,7 +32,7 @@ export default function WritingSide({ setTabContent, tabContent, current_path, s
             }
         }
     })
-    const [path, setPath] = useState<string>(current_path);
+    const [_, setPath] = useState<string>(current_path);
     const pathRef = useRef<string>("");
 
     useEffect(() => {
